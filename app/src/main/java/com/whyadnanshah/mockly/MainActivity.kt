@@ -45,7 +45,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             MocklyTheme {
                 var showSplash by rememberSaveable { mutableStateOf(true) }
-
                 if (showSplash) {
                     SplashScreen(
                         onSplashComplete = { showSplash = false }

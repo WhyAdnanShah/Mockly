@@ -1,6 +1,5 @@
 package com.whyadnanshah.mockly.destinations
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -8,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -21,6 +19,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,13 +30,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.whyadnanshah.mockly.HomeScreen.ui.TestDialog
 import com.whyadnanshah.mockly.R
+import com.whyadnanshah.mockly.viewModel.TestViewModel
+
 @Composable
 fun HomeScreen(paddingValues: PaddingValues) {
+
+    /*
+        Plan:
+        Plan yeh hai ki 'View' mein se saare prompt ko uthana hai and 'TestRequest' data class mein daalna.
+        'TestRequest' ek data class hai jahan par saare prompt ka data hold kiya jayega.
+    */
+
     val context = LocalContext.current
+    val viewModel : TestViewModel = viewModel()
+    val uiState = viewModel.uiState.collectAsState()
+    /*      'remember' and 'rememberSaveable' mein yeh diff hai ki 'rememberSaveable' mein configuration changes ko survive kar leta hai aur Activity Lifecycle ka scope hai
+            BUT 'remember' mein Destination Lifecycle ka scope hai and configuration changes ko survive nhi karta.
+    */
     var course by rememberSaveable { mutableStateOf("") }
     var subject by rememberSaveable { mutableStateOf("") }
     var topics by rememberSaveable { mutableStateOf("") }
@@ -46,6 +62,7 @@ fun HomeScreen(paddingValues: PaddingValues) {
     var format by rememberSaveable { mutableStateOf("") }
     var info by rememberSaveable { mutableStateOf("") }
 
+    var isTestDialog by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .padding(paddingValues)
@@ -53,7 +70,7 @@ fun HomeScreen(paddingValues: PaddingValues) {
             .verticalScroll(rememberScrollState())
     ) {
         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.shapes_animations))
-        LottieAnimation(composition, modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally))
+        LottieAnimation(composition, iterations = LottieConstants.IterateForever, modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally))
 
         InputField(
             value = course,
@@ -125,16 +142,39 @@ fun HomeScreen(paddingValues: PaddingValues) {
                 .height(80.dp)
                 .padding(16.dp),
             onClick = {
-                Toast.makeText(context, "Mock Paper Generated", Toast.LENGTH_SHORT).show()
+                viewModel.generateTest(
+                    course = course,
+                    subject = subject,
+                    topics = topics,
+                    difficulty = difficulty,
+                    questions = questions,
+                    format = format,
+                    info = info
+                )
+                isTestDialog  = true
             },
             shape = RoundedCornerShape(10.dp),
-            enabled = if (course == ""|| subject == ""|| topics == ""|| difficulty == ""|| questions == ""|| format == "") false else true
+//            enabled = !(course == ""|| subject == ""|| topics == ""|| difficulty == ""|| questions == ""|| format == "")
         )
         {
             Text(text = "Generate Mock Paper")
         }
     }
+
+    if (isTestDialog){
+        TestDialog(
+            onDismiss = { isTestDialog = false },
+            course = course,
+            subject = subject,
+            questions = questions,
+            difficulty= difficulty,
+            uiState = uiState
+        )
+    }
+
+//      yahan par main data ko pass kar rha hu 'TestRequest' data class mein...
 }
+
 
 @Composable
 fun InputField(
@@ -181,7 +221,8 @@ fun DropdownMenu(
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             readOnly = true,
             shape = RoundedCornerShape(15.dp),
-            label = { Text(label) }
+            label = { Text(label) },
+            placeholder = { Text(label) }
         )
         ExposedDropdownMenu(
             expanded = expanded,
