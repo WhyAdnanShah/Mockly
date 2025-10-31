@@ -17,11 +17,10 @@ class TestViewModel : ViewModel() {
     val uiState: StateFlow<TestUiState> = _uiState.asStateFlow()
 
     private val myApiService = Retrofit.Builder()
-        .baseUrl("http://192.168.1.108:8000")
+        .baseUrl("https://notably-fontal-noe.ngrok-free.dev")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(APIService::class.java)
-
     fun generateTest(
         course: String,
         subject: String,
@@ -33,7 +32,6 @@ class TestViewModel : ViewModel() {
     ) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
-
             try {
                 val request = TestRequest(
                     course = course,
