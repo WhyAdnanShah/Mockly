@@ -13,6 +13,8 @@ runtime = "1.9.0"
 navigationCompose = "2.9.3"
 graphicsShapes = "1.0.1"
 ui = "1.9.1"
+roomCommonJvm = "2.8.3"
+roomKtx = "2.8.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -34,6 +36,8 @@ androidx-runtime = { group = "androidx.compose.runtime", name = "runtime", versi
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 androidx-graphics-shapes = { group = "androidx.graphics", name = "graphics-shapes", version.ref = "graphicsShapes" }
 ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
+androidx-room-common-jvm = { group = "androidx.room", name = "room-common-jvm", version.ref = "roomCommonJvm" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

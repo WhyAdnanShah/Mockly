@@ -37,10 +37,11 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.whyadnanshah.mockly.HomeScreen.ui.TestDialog
 import com.whyadnanshah.mockly.R
+import com.whyadnanshah.mockly.viewModel.SavedTestViewModel
 import com.whyadnanshah.mockly.viewModel.TestViewModel
 
 @Composable
-fun HomeScreen(paddingValues: PaddingValues) {
+fun HomeScreen(paddingValues: PaddingValues, savedTestViewModel: SavedTestViewModel) {
 
     /*
         Plan:
@@ -62,7 +63,7 @@ fun HomeScreen(paddingValues: PaddingValues) {
     var format by rememberSaveable { mutableStateOf("") }
     var info by rememberSaveable { mutableStateOf("") }
 
-    var isTestDialog by remember { mutableStateOf(false) }
+    var isTestDialog by rememberSaveable { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .padding(paddingValues)
@@ -168,7 +169,8 @@ fun HomeScreen(paddingValues: PaddingValues) {
             subject = subject,
             questions = questions,
             difficulty= difficulty,
-            uiState = uiState
+            uiState = uiState,
+            savedTestViewModel = savedTestViewModel
         )
     }
 }

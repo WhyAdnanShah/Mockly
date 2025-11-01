@@ -13,6 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.jvm.java
 
 class TestViewModel : ViewModel() {
+    /*  This is For sending the request to the server and getting the response  */
     private val _uiState = MutableStateFlow(TestUiState())
     val uiState: StateFlow<TestUiState> = _uiState.asStateFlow()
 

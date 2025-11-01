@@ -1,6 +1,7 @@
 package com.whyadnanshah.mockly.navigation
 
 import android.annotation.SuppressLint
+import android.app.Application
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,7 +41,10 @@ import com.whyadnanshah.mockly.destinations.SavedScreen
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.whyadnanshah.mockly.destinations.SettingsScreen
+import com.whyadnanshah.mockly.viewModel.SavedTestViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -125,10 +129,20 @@ fun AppNavigation() {
                 }
             }
             composable ("Home"){
-                HomeScreen(padding)
+                HomeScreen(padding,
+                    savedTestViewModel = viewModel(
+                        factory = SavedTestViewModelFactory(application = LocalContext.current.applicationContext as Application)
+                    )
+                )
             }
             composable ("Saved"){
-                SavedScreen()
+                SavedScreen(
+                    paddingValues = padding,
+                    savedTestViewModel = viewModel(
+                        factory = SavedTestViewModelFactory(application = LocalContext.current.applicationContext as Application)
+                    )
+                )
+
             }
             composable ("PYQs"){
                 PYQScreen(padding)

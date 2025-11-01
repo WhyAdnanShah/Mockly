@@ -26,7 +26,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -42,6 +41,8 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.whyadnanshah.mockly.R
+import com.whyadnanshah.mockly.SavedScreen.TestEntity
+import com.whyadnanshah.mockly.viewModel.SavedTestViewModel
 import com.whyadnanshah.mockly.viewModel.TestUiState
 import kotlinx.coroutines.delay
 
@@ -52,10 +53,25 @@ fun TestDialog(
     subject: String,
     questions: String,
     difficulty: String,
-    uiState: State<TestUiState>
+    uiState: State<TestUiState>,
+    savedTestViewModel: SavedTestViewModel
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.loading))
     val context = LocalContext.current
+
+    val testResponse = uiState.value.generatedTest
+        .replace("\\n" , "\n")
+        .replace("**", "")
+        .replace("\n", "\n\n")
+        .replace("[", "")
+        .replace("]", "")
+        .replace("```json", "")
+        .replace("```", "")
+        .replace("\"", "")
+        .replace("{", "")
+        .replace("}", "")
+        .replace(".,", ".")
+        .replace("?,", "?")
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -92,6 +108,15 @@ fun TestDialog(
                         Button(
                             onClick = {
                                 Toast.makeText(context, "Test Saved", Toast.LENGTH_SHORT).show()
+                                val newTest = TestEntity(
+                                    course = course,
+                                    paperName = subject,
+                                    questions = questions,
+                                    difficulty = difficulty,
+                                    response = testResponse
+                                )
+                                savedTestViewModel.addTest(newTest)
+                                onDismiss()
                             },
                             colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
                         ){
@@ -112,21 +137,9 @@ fun TestDialog(
                 ){
                     when{
                         uiState.value.generatedTest.isNotEmpty()-> {
-                            val testResponse = uiState.value.generatedTest
-                                .replace("\\n" , "\n")
-                                .replace("**", "")
-                                .replace("\n", "\n\n")
-                                .replace("[", "")
-                                .replace("]", "")
-                                .replace("```json", "")
-                                .replace("```", "")
-                                .replace("\"", "")
-                                .replace("{", "")
-                                .replace("}", "")
-                                .replace(".,", ".")
-                                .replace("?,", "?")
+
                             var textIndex by remember { mutableIntStateOf(0) }
-                            val animatedText = testResponse.substring(0, textIndex.coerceAtMost(testResponse.length))
+                            val animatedText = testResponse.take(textIndex.coerceAtMost(testResponse.length))
                             LaunchedEffect(uiState.value.generatedTest) {
                                 while (textIndex < uiState.value.generatedTest.length){
                                     textIndex++
