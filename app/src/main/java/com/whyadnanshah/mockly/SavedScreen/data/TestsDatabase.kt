@@ -1,4 +1,4 @@
-package com.whyadnanshah.mockly.SavedScreen
+package com.whyadnanshah.mockly.SavedScreen.data
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

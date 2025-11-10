@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.room.Room
-import com.whyadnanshah.mockly.SavedScreen.TestEntity
-import com.whyadnanshah.mockly.SavedScreen.TestsDatabase
+import com.whyadnanshah.mockly.SavedScreen.data.TestEntity
+import com.whyadnanshah.mockly.SavedScreen.data.TestsDatabase
 import kotlinx.coroutines.launch
 
 class SavedTestViewModel(application: Application) : AndroidViewModel(application) {

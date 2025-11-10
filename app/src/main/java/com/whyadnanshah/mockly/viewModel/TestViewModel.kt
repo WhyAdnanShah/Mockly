@@ -23,13 +23,15 @@ class TestViewModel : ViewModel() {
         .build()
         .create(APIService::class.java)
     fun generateTest(
-        course: String,
-        subject: String,
-        topics: String,
-        difficulty: String,
-        questions: String,
-        format: String,
-        info: String = ""
+        course: String = "",
+        subject: String = "" ,
+        topics: String = "",
+        difficulty: String = "",
+        questions: String = "" ,
+        format: String = "",
+        info: String = "",
+        testResponse: String = "",
+        hintQuestion: String= ""
     ) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
@@ -41,7 +43,9 @@ class TestViewModel : ViewModel() {
                     difficulty = difficulty,
                     questions = questions,
                     format = format,
-                    info = info
+                    info = info,
+                    testResponse = testResponse,
+                    hintQuestion = hintQuestion
                 )
 
                 val response = myApiService.generateTest(request)

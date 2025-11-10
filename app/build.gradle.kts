@@ -66,6 +66,7 @@ dependencies {
 
     // Room Database - CORRECTED DEPENDENCIES
     implementation("androidx.room:room-runtime:2.8.0")
+    implementation(libs.androidx.compose.runtime)
     kapt("androidx.room:room-compiler:2.8.0")
 
     testImplementation(libs.junit)

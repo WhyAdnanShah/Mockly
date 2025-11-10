@@ -7,5 +7,7 @@ data class TestRequest (
     val difficulty: String,
     val questions: String,
     val format: String,
-    val info: String
+    val info: String,
+    val testResponse: String,
+    val hintQuestion: String
 )

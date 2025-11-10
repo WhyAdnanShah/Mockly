@@ -49,7 +49,6 @@ fun HomeScreen(paddingValues: PaddingValues, savedTestViewModel: SavedTestViewMo
         'TestRequest' ek data class hai jahan par saare prompt ka data hold kiya jayega.
     */
 
-    val context = LocalContext.current
     val viewModel : TestViewModel = viewModel()
     val uiState = viewModel.uiState.collectAsState()
     /*      'remember' and 'rememberSaveable' mein yeh diff hai ki 'rememberSaveable' mein configuration changes ko survive kar leta hai aur Activity Lifecycle ka scope hai

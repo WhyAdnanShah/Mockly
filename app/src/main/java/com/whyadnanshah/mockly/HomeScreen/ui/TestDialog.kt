@@ -41,7 +41,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.whyadnanshah.mockly.R
-import com.whyadnanshah.mockly.SavedScreen.TestEntity
+import com.whyadnanshah.mockly.SavedScreen.data.TestEntity
 import com.whyadnanshah.mockly.viewModel.SavedTestViewModel
 import com.whyadnanshah.mockly.viewModel.TestUiState
 import kotlinx.coroutines.delay
