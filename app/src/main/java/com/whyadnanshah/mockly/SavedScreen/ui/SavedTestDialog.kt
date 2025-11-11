@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.whyadnanshah.mockly.viewModel.SavedTestViewModel
 import com.whyadnanshah.mockly.viewModel.TestViewModel
 
 @Composable
@@ -47,17 +48,23 @@ fun SavedTestDialog(
     paperName: String,
     questions: String,
     difficulty: String,
-    response: String
+    response: String,
+    savedTestViewModel: SavedTestViewModel
 ) {
 
     val viewModel : TestViewModel = viewModel()
     val uiState = viewModel.uiState.collectAsState()
 
     var isHintDialog by remember { mutableStateOf(false) }
-    var isHintField by remember { mutableStateOf(false) }
+    var isHintButton by remember { mutableStateOf(false) }
     var hintQuestion by remember { mutableStateOf("") }
     var hintQuestionInt = hintQuestion.toIntOrNull() ?: 0
+
+    var isAttemptButton by remember { mutableStateOf(false) }
+    var attemptedQuestions by remember { mutableStateOf("") }
+    var attemptedQuestionsInt = attemptedQuestions.toIntOrNull() ?: 0
     var isAttemptDialog by remember { mutableStateOf(false) }
+
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -99,20 +106,20 @@ fun SavedTestDialog(
                 ) {
                     Button(
                         modifier = Modifier.wrapContentSize(),
-                        onClick = { isHintField = !isHintField }
+                        onClick = { isHintButton = !isHintButton }
                     ) {
                         Text("Hints")
                     }
 
                     Button(
                         modifier = Modifier.wrapContentSize(),
-                        onClick = { isAttemptDialog = true }
+                        onClick = { isAttemptButton = !isAttemptButton }
                     ) {
                         Text("Attempt")
                     }
                 }
                 AnimatedVisibility(
-                    visible = isHintField,
+                    visible = isHintButton,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 ) {
                     OutlinedTextField(
@@ -129,7 +136,7 @@ fun SavedTestDialog(
                                             isHintDialog = false
                                         else {
                                             isHintDialog = true
-                                            isHintField = !isHintField
+                                            isHintButton = !isHintButton
                                             viewModel.generateTest(
                                                 testResponse = response,
                                                 hintQuestion = hintQuestion
@@ -144,6 +151,63 @@ fun SavedTestDialog(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         isError = hintQuestionInt > questions.toInt(),
                     )
+                }
+                AnimatedVisibility(
+                    visible = isAttemptButton,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ){
+                    Column() {
+                        Text("How many questions could you attempt?", fontWeight = FontWeight.W300, modifier = Modifier.padding(top = 10.dp))
+                        OutlinedTextField(
+                            value = attemptedQuestions,
+                            onValueChange = {  attemptedQuestions = it },
+                            label = { Text("Attempted Questions?") },
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                            shape = RoundedCornerShape(10.dp),
+                            trailingIcon = {
+                                Icon(modifier = Modifier
+                                    .clickable(
+                                        onClick = {
+                                            if(attemptedQuestionsInt > questions.toInt())
+                                                isAttemptDialog = false
+                                            else {
+                                                isAttemptDialog = true
+                                                isAttemptButton = !isAttemptButton
+                                                if (((attemptedQuestionsInt.toFloat() / questions.toInt()) * 100) < 33){
+                                                    viewModel.generateTest(
+                                                        course = course,
+                                                        subject = paperName,
+                                                        questions = questions,
+                                                        difficulty = "Easy",
+                                                    )
+                                                }
+                                                else if (((attemptedQuestionsInt.toFloat() / questions.toInt()) * 100) >= 33 && ((attemptedQuestionsInt.toFloat() / questions.toInt()) * 100) <= 66){
+                                                    viewModel.generateTest(
+                                                        course = course,
+                                                        subject = paperName,
+                                                        questions = questions,
+                                                        difficulty = "Medium",
+                                                    )
+                                                }
+                                                else if (((attemptedQuestionsInt.toFloat() / questions.toInt()) * 100) > 66){
+                                                    viewModel.generateTest(
+                                                        course = course,
+                                                        subject = paperName,
+                                                        questions = questions,
+                                                        difficulty = "Hard",
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    ),
+                                    imageVector = Icons.Default.Send,
+                                    contentDescription = "Send msg"
+                                )
+                            },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            isError = attemptedQuestionsInt > questions.toInt(),
+                        )
+                    }
                 }
             }
         }
@@ -162,13 +226,14 @@ fun SavedTestDialog(
     if (isAttemptDialog) {
         AttemptDialog(
             onDismiss = { isAttemptDialog = false },
+            course = course,
             paperName = paperName,
-            response = response
+            difficulty = if (((attemptedQuestionsInt.toFloat() / questions.toInt()) * 100) < 33) "Easy"
+            else if (((attemptedQuestionsInt.toFloat() / questions.toInt()) * 100) >= 33 && ((attemptedQuestionsInt.toFloat() / questions.toInt()) * 100) <= 66) "Medium"
+            else if (((attemptedQuestionsInt.toFloat() / questions.toInt()) * 100) > 66) "Hard" else "NA",
+            questions = questions,
+            uiState = uiState,
+            savedTestViewModel = savedTestViewModel
         )
     }
-}
-
-@Composable
-fun AttemptDialog(onDismiss: () -> Unit, paperName: String, response: String) {
-//    TODO("Not yet implemented")
 }

@@ -29,6 +29,18 @@ fun HintDialog(
     difficulty: String
 ) {
     val hintResponse = uiState.value.generatedTest
+        .replace("\\n" , "\n")
+        .replace("**", "")
+        .replace("\n", "\n\n")
+        .replace("[", "")
+        .replace("]", "")
+        .replace("```json", "")
+        .replace("```", "")
+        .replace("\"", "")
+        .replace("{", "")
+        .replace("}", "")
+        .replace(".,", ".")
+        .replace("?,", "?")
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(usePlatformDefaultWidth = false)
