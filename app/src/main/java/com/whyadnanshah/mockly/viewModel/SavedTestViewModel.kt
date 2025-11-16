@@ -15,7 +15,7 @@ class SavedTestViewModel(application: Application) : AndroidViewModel(applicatio
         application.applicationContext,
         TestsDatabase::class.java,
         "database-name"
-    ).fallbackToDestructiveMigration(false).build()
+    ).fallbackToDestructiveMigration().build()
 
     var allTests = db.testsDao().getAllTests()
 

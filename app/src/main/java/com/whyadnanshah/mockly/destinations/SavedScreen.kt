@@ -40,7 +40,7 @@ fun SavedScreen(savedTestViewModel: SavedTestViewModel, paddingValues: PaddingVa
         } else {
             items(savedTest.size) { index ->
                 val test = savedTest[index]
-                var isSavedTestDialog by remember { mutableStateOf(false) } // Move inside items
+                var isSavedTestDialog by remember { mutableStateOf(false) }
 
                 Card(
                     modifier = Modifier

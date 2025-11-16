@@ -34,7 +34,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.whyadnanshah.mockly.SplashScreen
+//import com.whyadnanshah.mockly.SplashScreen
 import com.whyadnanshah.mockly.destinations.HomeScreen
 import com.whyadnanshah.mockly.destinations.PYQScreen
 import com.whyadnanshah.mockly.destinations.SavedScreen
@@ -119,15 +119,17 @@ fun AppNavigation() {
 
     ){ padding ->
         NavHost(navController = navController, startDestination = "Home") {
-            composable("splash") {
-                SplashScreen {
-                    navController.navigate("main") {
-                        popUpTo("splash") {
-                            inclusive = true
-                        }
-                    }
-                }
-            }
+
+//            composable("splash") {
+//                SplashScreen {
+//                    navController.navigate("main") {
+//                        popUpTo("splash") {
+//                            inclusive = true
+//                        }
+//                    }
+//                }
+//            }
+
             composable ("Home"){
                 HomeScreen(padding,
                     savedTestViewModel = viewModel(
@@ -157,11 +159,10 @@ fun AppNavigation() {
 }
 
 
-
 @Composable
 fun BottomNavigationBar(navController: NavHostController, items: List<BottomNavItems>) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
+    val navCurrent by navController.currentBackStackEntryAsState()
+    val currentRoute = navCurrent?.destination?.route
     NavigationBar (
         containerColor = Color.Transparent,
     ){
@@ -192,12 +193,5 @@ fun BottomNavigationBar(navController: NavHostController, items: List<BottomNavI
                 },
             )
         }
-    }
-}
-
-@Composable
-fun CenteredText(text: String, fontSize: TextUnit) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text, fontSize = fontSize, modifier = Modifier)
     }
 }

@@ -45,22 +45,20 @@ fun HomeScreen(paddingValues: PaddingValues, savedTestViewModel: SavedTestViewMo
 
     /*
         Plan:
-        Plan yeh hai ki 'View' mein se saare prompt ko uthana hai and 'TestRequest' data class mein daalna.
-        'TestRequest' ek data class hai jahan par saare prompt ka data hold kiya jayega.
+        Plan yeh hai ki 'View' mein se saare prompt ko uthana hai and 'TestViewModel.generateTest()' fun mein daalna.
+
     */
 
     val viewModel : TestViewModel = viewModel()
     val uiState = viewModel.uiState.collectAsState()
-    /*      'remember' and 'rememberSaveable' mein yeh diff hai ki 'rememberSaveable' mein configuration changes ko survive kar leta hai aur Activity Lifecycle ka scope hai
-            BUT 'remember' mein Destination Lifecycle ka scope hai and configuration changes ko survive nhi karta.
-    */
-    var course by rememberSaveable { mutableStateOf("") }
-    var subject by rememberSaveable { mutableStateOf("") }
-    var topics by rememberSaveable { mutableStateOf("") }
-    var difficulty by rememberSaveable { mutableStateOf("") }
-    var questions by rememberSaveable { mutableStateOf("") }
-    var format by rememberSaveable { mutableStateOf("") }
-    var info by rememberSaveable { mutableStateOf("") }
+
+    var course by remember { mutableStateOf("") }
+    var subject by remember { mutableStateOf("") }
+    var topics by remember { mutableStateOf("") }
+    var difficulty by remember { mutableStateOf("") }
+    var questions by remember { mutableStateOf("") }
+    var format by remember { mutableStateOf("") }
+    var info by remember { mutableStateOf("") }
 
     var isTestDialog by rememberSaveable { mutableStateOf(false) }
     Column(
@@ -72,7 +70,7 @@ fun HomeScreen(paddingValues: PaddingValues, savedTestViewModel: SavedTestViewMo
         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.shapes_animations))
         LottieAnimation(composition, iterations = LottieConstants.IterateForever, modifier = Modifier.fillMaxWidth().align(Alignment.CenterHorizontally))
 
-        InputField(
+        PromptInputField(
             value = course,
             onValueChange = { course = it },
             label = "Select Course",
@@ -81,7 +79,7 @@ fun HomeScreen(paddingValues: PaddingValues, savedTestViewModel: SavedTestViewMo
 
         Spacer(Modifier.height(25.dp))
 
-        InputField(
+        PromptInputField(
             value = subject,
             onValueChange = { subject = it },
             label = "Select Subject",
@@ -90,7 +88,7 @@ fun HomeScreen(paddingValues: PaddingValues, savedTestViewModel: SavedTestViewMo
 
         Spacer(Modifier.height(25.dp))
 
-        InputField(
+        PromptInputField(
             value = topics,
             onValueChange = { topics = it },
             label = "Select Topics",
@@ -99,7 +97,7 @@ fun HomeScreen(paddingValues: PaddingValues, savedTestViewModel: SavedTestViewMo
 
         Spacer(Modifier.height(25.dp))
 
-        DropdownMenu(
+        PromptDropdownMenu(
             selectedValue = difficulty,
             onValueChange = { difficulty = it },
             label = "Select Difficulty Level",
@@ -108,7 +106,7 @@ fun HomeScreen(paddingValues: PaddingValues, savedTestViewModel: SavedTestViewMo
 
         Spacer(Modifier.height(25.dp))
 
-        InputField(
+        PromptInputField(
             value = questions,
             onValueChange = { questions = it },
             label = "No. Of Questions",
@@ -118,7 +116,7 @@ fun HomeScreen(paddingValues: PaddingValues, savedTestViewModel: SavedTestViewMo
 
         Spacer(Modifier.height(25.dp))
 
-        InputField(
+        PromptInputField(
             value = format,
             onValueChange = { format = it },
             label = "Format of the Mock paper",
@@ -127,7 +125,7 @@ fun HomeScreen(paddingValues: PaddingValues, savedTestViewModel: SavedTestViewMo
 
         Spacer(Modifier.height(25.dp))
 
-        InputField(
+        PromptInputField(
             value = info,
             onValueChange = { info = it },
             label = "*Additional Info",
@@ -176,7 +174,7 @@ fun HomeScreen(paddingValues: PaddingValues, savedTestViewModel: SavedTestViewMo
 
 
 @Composable
-fun InputField(
+fun PromptInputField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
@@ -198,7 +196,7 @@ fun InputField(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropdownMenu(
+fun PromptDropdownMenu(
     selectedValue: String,
     onValueChange: (String) -> Unit,
     label: String,
