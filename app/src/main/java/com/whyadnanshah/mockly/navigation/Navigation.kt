@@ -131,10 +131,11 @@ fun AppNavigation() {
 //            }
 
             composable ("Home"){
-                HomeScreen(padding,
+                HomeScreen(
                     savedTestViewModel = viewModel(
                         factory = SavedTestViewModelFactory(application = LocalContext.current.applicationContext as Application)
-                    )
+                    ),
+                    paddingValues = padding
                 )
             }
             composable ("Saved"){

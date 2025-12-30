@@ -33,6 +33,7 @@ class TestViewModel : ViewModel() {
         hintQuestion: String= ""
     ) {
         viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(generatedTest = "")
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null)
             try {
                 val request = TestRequest(

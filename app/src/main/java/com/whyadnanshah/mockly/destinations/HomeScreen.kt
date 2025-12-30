@@ -27,7 +27,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -46,7 +45,6 @@ fun HomeScreen(paddingValues: PaddingValues, savedTestViewModel: SavedTestViewMo
     /*
         Plan:
         Plan yeh hai ki 'View' mein se saare prompt ko uthana hai and 'TestViewModel.generateTest()' fun mein daalna.
-
     */
 
     val viewModel : TestViewModel = viewModel()

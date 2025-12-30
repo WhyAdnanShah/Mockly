@@ -40,6 +40,7 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.whyadnanshah.mockly.PDFGenerator
 import com.whyadnanshah.mockly.R
 import com.whyadnanshah.mockly.SavedScreen.data.TestEntity
 import com.whyadnanshah.mockly.viewModel.SavedTestViewModel
@@ -105,22 +106,41 @@ fun TestDialog(
                             imageVector = Icons.Default.Close,
                             contentDescription = null,
                         )
-                        Button(
-                            onClick = {
-                                Toast.makeText(context, "Test Saved", Toast.LENGTH_SHORT).show()
-                                val newTest = TestEntity(
-                                    course = course,
-                                    paperName = subject,
-                                    questions = questions,
-                                    difficulty = difficulty,
-                                    response = testResponse
-                                )
-                                savedTestViewModel.addTest(newTest)
-                                onDismiss()
-                            },
-                            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
-                        ){
-                            Text("Save")
+                        Row(){
+                            Button(
+                                onClick = {
+                                    Toast.makeText(context, "Test Saved", Toast.LENGTH_SHORT).show()
+                                    val newTest = TestEntity(
+                                        course = course,
+                                        paperName = subject,
+                                        questions = questions,
+                                        difficulty = difficulty,
+                                        response = testResponse
+                                    )
+                                    savedTestViewModel.addTest(newTest)
+                                    onDismiss()
+                                },
+                                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
+                            ){
+                                Text("Save")
+                            }
+
+                            Button(
+                                onClick = {
+                                    val pdfGenerator = PDFGenerator(context)
+                                    pdfGenerator.generateQuestionPaperPDF(
+                                        course = course,
+                                        subject = subject,
+                                        questions = questions,
+                                        difficulty = difficulty,
+                                        testResponse = testResponse,
+                                        fileName = "${subject}_Test.pdf"
+                                    )
+                                }
+
+                            ){
+                                Text("Export as PDF")
+                            }
                         }
                     }
                     Spacer(modifier = Modifier.height(16.dp))

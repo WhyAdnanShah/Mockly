@@ -3,7 +3,6 @@ package com.whyadnanshah.mockly.SavedScreen.ui
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,25 +25,21 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -52,10 +47,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.whyadnanshah.mockly.PDFGenerator
 import com.whyadnanshah.mockly.viewModel.SavedTestViewModel
-import com.whyadnanshah.mockly.viewModel.TestUiState
 import com.whyadnanshah.mockly.viewModel.TestViewModel
-import kotlinx.coroutines.delay
 
 @Composable
 fun SavedTestDialog(
@@ -67,6 +61,7 @@ fun SavedTestDialog(
     response: String,
     savedTestViewModel: SavedTestViewModel
 ) {
+    val context = LocalContext.current
 
     //This will be only for collecting data from the ViewModel
     val viewModel : TestViewModel = viewModel()
@@ -96,11 +91,33 @@ fun SavedTestDialog(
                     .fillMaxSize()
                     .padding(24.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Close",
-                    modifier = Modifier.clickable { onDismiss() }
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close",
+                        modifier = Modifier.clickable { onDismiss() }
+                    )
+                    Button(
+                        onClick = {
+                            val pdfGenerator = PDFGenerator(context)
+                            pdfGenerator.generateQuestionPaperPDF(
+                                course = course,
+                                subject = paperName,
+                                questions = questions,
+                                difficulty = difficulty,
+                                testResponse = response,
+                                fileName = "${paperName}_Test.pdf"
+                            )
+                        }
+
+                    ){
+                        Text("Export as PDF")
+                    }
+                }
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = course,
